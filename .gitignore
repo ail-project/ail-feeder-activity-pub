@@ -1,0 +1,6 @@
+etc/pytooter_clientcred.secret
+etc/pytooter_usercred.secret
+credentials.txt
+geckodriver.log
+instances.txt
+readyInstances.txt

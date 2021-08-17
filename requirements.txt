@@ -1,0 +1,9 @@
+newspaper3k
+redis
+validators
+Mastodon.py
+pyail
+urlextract
+requests
+pydispo
+selenium
