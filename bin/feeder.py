@@ -151,8 +151,7 @@ for url in urls:
         urls = extractor.find_urls(account['note'])
         for url in urls:
             # If the url is not valid, drop it and continue
-            surl = url.split()[0]
-            if not validators.url(surl):
+            if not validators.url(url):
                 continue
         
             output = {}
@@ -163,37 +162,37 @@ for url in urls:
             output['meta'] = {}
             output['meta']['activitypub:account_id'] = account['id']
 
-            output['meta']['activitypub:url-extracted'] = surl
+            output['meta']['activitypub:url-extracted'] = url
 
             signal.alarm(10)
             try:
-                article = newspaper.Article(surl)
+                article = newspaper.Article(url)
             except TimeoutError:
                 if args.verbose:
-                    logging.error(f"Timeout reached for {surl}")
+                    logging.error(f"Timeout reached for {url}")
                 continue
             else:
                 signal.alarm(0)
 
             # Caching
-            if r.exists(f"cu:{base64.b64encode(surl.encode())}"):
+            if r.exists(f"cu:{base64.b64encode(url.encode())}"):
                 if args.verbose:
-                    logging.info(f"URL {surl} already processed")
+                    logging.info(f"URL {url} already processed")
                 if not args.nocache:
                     continue
             else:
-                r.set(f"cu:{base64.b64encode(surl.encode())}", account['note'])
-                r.expire(f"cu:{base64.b64encode(surl.encode())}", cache_expire)
+                r.set(f"cu:{base64.b64encode(url.encode())}", account['note'])
+                r.expire(f"cu:{base64.b64encode(url.encode())}", cache_expire)
             
             if args.verbose:
-                logging.info(f"Downloading and parsing {surl}")
+                logging.info(f"Downloading and parsing {url}")
 
             try:
                 article.download()
                 article.parse()
             except ArticleException:
                 if args.verbose:
-                    logging.error(f"Unable to download/parse {surl}")
+                    logging.error(f"Unable to download/parse {url}")
                 continue
 
             output['data'] = article.html
@@ -204,7 +203,7 @@ for url in urls:
                 article.nlp()
             except:
                 if args.verbose:
-                    logging.error(f"Unable to nlp {surl}")
+                    logging.error(f"Unable to nlp {url}")
                 nlpFailed = True
 
                 obj = json.dumps(output['data'], indent=4, sort_keys=True)
@@ -275,10 +274,9 @@ for url in urls:
         urls = extractor.find_urls(status['content'])
         for url in urls:
             # If the url is not valid, drop it and continue
-            surl = url.split()[0]
-            if not validators.url(surl):
+            if not validators.url(url):
                 continue
-        
+
             output = {}
             output['source'] = ailurlextract
             output['source-uuid'] = uuid
@@ -287,37 +285,37 @@ for url in urls:
             output['meta'] = {}
             output['meta']['activitypub:status_id'] = status['id']
 
-            output['meta']['activitypub:url-extracted'] = surl
+            output['meta']['activitypub:url-extracted'] = url
 
             signal.alarm(10)
             try:
-                article = newspaper.Article(surl)
+                article = newspaper.Article(url)
             except TimeoutError:
                 if args.verbose:
-                    logging.error(f"Timeout reached for {surl}")
+                    logging.error(f"Timeout reached for {url}")
                 continue
             else:
                 signal.alarm(0)
 
             # Caching
-            if r.exists(f"cu:{base64.b64encode(surl.encode())}"):
+            if r.exists(f"cu:{base64.b64encode(url.encode())}"):
                 if args.verbose:
-                    logging.info(f"URL {surl} already processed")
+                    logging.info(f"URL {url} already processed")
                 if not args.nocache:
                     continue
             else:
-                r.set(f"cu:{base64.b64encode(surl.encode())}", status['content'])
-                r.expire(f"cu:{base64.b64encode(surl.encode())}", cache_expire)
+                r.set(f"cu:{base64.b64encode(url.encode())}", status['content'])
+                r.expire(f"cu:{base64.b64encode(url.encode())}", cache_expire)
             
             if args.verbose:
-                logging.info(f"Downloading and parsing {surl}")
+                logging.info(f"Downloading and parsing {url}")
 
             try:
                 article.download()
                 article.parse()
             except ArticleException:
                 if args.verbose:
-                    logging.error(f"Unable to download/parse {surl}")
+                    logging.error(f"Unable to download/parse {url}")
                 continue
 
             output['data'] = article.html
@@ -328,7 +326,7 @@ for url in urls:
                 article.nlp()
             except:
                 if args.verbose:
-                    logging.error(f"Unable to nlp {surl}")
+                    logging.error(f"Unable to nlp {url}")
                 nlpFailed = True
 
                 obj = json.dumps(output['data'], indent=4, sort_keys=True)

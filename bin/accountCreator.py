@@ -92,7 +92,12 @@ for instance in instances:
                         logging.error("Approval required, skipping...\n")
                     continue
                 time.sleep(2)
-                browser.find_elements_by_name('button')[0].click()
+                buttons = browser.find_elements_by_name('button')
+                if len(buttons) != 0:
+                    buttons[0].click()
+                else:
+                    logging.error("No button found, skipping...")
+                    continue
                 time.sleep(5)
                 if args.verbose:
                     logging.info("Registered successfully!\n")
@@ -129,7 +134,12 @@ with open('readyInstances.txt', 'w') as f:
         response2 = response2.json()
         try:
             # Search for the email verification code
-            confirmationLink = re.findall('https://.*/auth/.*', response2['textBody'])[0]
+            links = re.findall('https://.*/auth/.*', response2['textBody'])
+            if len(links) != 0:
+                confirmationLink = links[0]
+            else:
+                logging.error("No link found, skipping...")
+                continue
             if args.verbose:
                 logging.info(confirmationLink)
             # Open the email verification link to verify the email
