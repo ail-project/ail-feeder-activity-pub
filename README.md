@@ -51,7 +51,7 @@ optional arguments:
   --nocache   disable cache
 ```
 
-NB: Make sure to enter the required fields in the `ail-feeder-activitypub.cfg` file. Also make sure there is an instance of the AIL-framework running.
+NB: Make sure to enter the required fields in the `ail-feeder-activitypub.cfg` file. Also make sure there is an instance of the AIL-framework running. There is a sample of the cfg file you can use.
 
 ## Notes
 
